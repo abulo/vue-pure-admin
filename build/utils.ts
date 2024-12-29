@@ -56,7 +56,8 @@ const wrapperEnv = (envConf: Recordable): ViteEnv => {
     VITE_ROUTER_HISTORY: "",
     VITE_CDN: false,
     VITE_HIDE_HOME: "false",
-    VITE_COMPRESSION: "none"
+    VITE_COMPRESSION: "none",
+    VITE_PROXY: []
   };
 
   for (const envName of Object.keys(envConf)) {
@@ -66,6 +67,13 @@ const wrapperEnv = (envConf: Recordable): ViteEnv => {
 
     if (envName === "VITE_PORT") {
       realName = Number(realName);
+    }
+    if (envName === "VITE_PROXY") {
+      try {
+        realName = JSON.parse(realName);
+      } catch (error) {
+        console.log("VITE_PROXY解析错误", error);
+      }
     }
     ret[envName] = realName;
     if (typeof realName === "string") {
