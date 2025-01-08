@@ -16,7 +16,9 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     VITE_PORT,
     VITE_COMPRESSION,
     VITE_PUBLIC_PATH,
-    VITE_PROXY
+    VITE_PROXY,
+    VITE_OPEN,
+    VITE_DROP_CONSOLE
   } = wrapperEnv(loadEnv(mode, root));
   return {
     base: VITE_PUBLIC_PATH,
@@ -30,6 +32,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       port: VITE_PORT,
       host: "0.0.0.0",
       cors: true,
+      open: VITE_OPEN,
       // 本地跨域代理 https://cn.vitejs.dev/config/server-options.html#server-proxy
       proxy: createProxy(VITE_PROXY),
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
@@ -47,6 +50,12 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       // https://cn.vitejs.dev/guide/build.html#browser-compatibility
       target: "es2015",
       sourcemap: false,
+      terserOptions: {
+        compress: {
+          drop_console: VITE_DROP_CONSOLE,
+          drop_debugger: VITE_DROP_CONSOLE
+        }
+      },
       // 消除打包大小超过500kb警告
       chunkSizeWarningLimit: 4000,
       rollupOptions: {
